@@ -1,16 +1,8 @@
 # noppon
 
-A new Flutter project.
+ใช้คำสั่ง flutter run --no-sound-null-safety ในการรันนะครับ เนื่องจากมี dependencies บางตัวที่ไม่สามารถรัน fluttet run ได้ แต่คำสั่งนี้สามารถใช้งานได้เหมือนกัน
 
-## Getting Started
+ไฟล์ APK จะอยู่ที่ noppon/build/app/outputs/apk/debug/app-debug.apk 
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ไฟล์โปรเจคเว็บ ตอนนี้จะเป็นตัวอย่างหลายๆไฟล์นะครับ ซึ่งเด่วจะอธิบายให้ในคลิปอีกที
+https://drive.google.com/file/d/1S7df_oe5zOI9DVvwWfUA7miILXfrvamx/view?usp=sharing (ดาวโหลดไว้เลยนะครับ)
