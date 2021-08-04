@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:noppon/Business/add_image.dart';
+import 'package:noppon/Business/business_add.dart';
 import 'package:noppon/Business/business_list_user.dart';
 import 'package:noppon/User/favorite.dart';
 import 'package:noppon/Entrepreneur/launcher.dart';
@@ -9,8 +9,6 @@ import 'package:noppon/User/launcher_user.dart';
 import 'package:noppon/User/profile.dart';
 import 'package:noppon/login.dart';
 import 'package:noppon/register.dart';
-import 'package:noppon/z2.dart';
-import 'package:noppon/zz.dart';
 import 'splash_screen.dart';
 
 void main() async {
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
       /* theme: ThemeData(
         primarySwatch: Colors.blue,
       ), */
-      home: SplashScreen(),
+      home: SplashScreen(), // ไปหน้า SplashScreen
       debugShowCheckedModeBanner: false,
     );
   }

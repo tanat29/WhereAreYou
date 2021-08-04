@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:noppon/Business/add_image.dart';
+import 'package:noppon/Business/business_add.dart';
 import 'dart:ui';
 import 'dart:async';
 import 'package:noppon/Business/business_add.dart';
@@ -493,7 +493,9 @@ class _Business_List extends State<Business_List> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddImage())),
+            context,
+            MaterialPageRoute(
+                builder: (context) => BusinessAdd())), // ไปหน้าเพอ่มสถานที่
         tooltip: 'Increment',
         child: Icon(Icons.add),
         backgroundColor: Colors.pink,

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:noppon/Entrepreneur/launcher.dart';
 import 'package:noppon/User/launcher_user.dart';
@@ -19,9 +18,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // ประกาศตัวแปร
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final db = FirebaseDatabase.instance.reference().child("user");
   bool _validate = false;
 
   @override
@@ -31,24 +30,27 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
+  // เข้าสู่ฟังก์ชัน Login
   void validateAndSubmit() async {
-    FocusScope.of(context).unfocus();
+    FocusScope.of(context).unfocus(); // ปิดคีบอร์ด
     var email = emailController.text.toString().trim();
     var password = passwordController.text.toString().trim();
 
+    // เช็คอีเมลล์ว่าง
     if (email.isEmpty) {
       Toast.show("กรุณาใส่อีเมลล์ก่อน", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-
       return;
     }
 
+    // เช็ครหัสว่าง
     if (password.isEmpty) {
       Toast.show("กรุณาใส่รหัสผ่านก่อน", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
     }
 
+    // แสดง Progress
     final ProgressDialog pDialog = ProgressDialog(context);
     pDialog.style(
         message: "กรุณารอสักครู่ ...",
@@ -56,11 +58,14 @@ class _LoginPageState extends State<LoginPage> {
             margin: EdgeInsets.all(10.0), child: CircularProgressIndicator()));
     pDialog.show();
 
+    // เช็คข้อมูล
     if (await checkLogin(email, password)) {
+      // ถ้าไม่ถูก
       pDialog.hide();
       Toast.show("อีเมลล์หรือรหัสไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง", context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     } else {
+      // ถ้าถูกต้อง
       FirebaseFirestore.instance
           .collection('user')
           .where('email', isEqualTo: email)
@@ -69,9 +74,8 @@ class _LoginPageState extends State<LoginPage> {
           .get()
           .then((querySnapshot) {
         querySnapshot.docs.forEach((result) async {
-          //print(result.data()["email"]);
           pDialog.hide();
-
+          // รับค่าจาก Firestore
           var User_id = result.data()["user_id"];
           var Email = result.data()["email"];
           var Password = result.data()["password"];
@@ -79,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
           var Photo = result.data()["photo"];
           var Tel = result.data()["tel"];
           var Type = result.data()["type"];
-
+          // เก็บใน SharedPreferences
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool("check", true);
           await prefs.setString('user_id', User_id);
@@ -90,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
           await prefs.setString('tel', Tel);
           await prefs.setString('type', Type);
 
+          // ถ้าเป็น ผู้ประกอบการ ให้ไป Launcher ถ้าไม่ใช่ไป Launcher_User
           if (Type == "ผู้ประกอบการ") {
             Navigator.pushAndRemoveUntil(
               context,
@@ -105,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
           }
         });
       }).catchError((e) {
+        // ดัก Error
         Toast.show("เกิดข้อผิดพลาด กรุณาลองใหม่", context,
             duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
         pDialog.hide();
@@ -113,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<bool> checkLogin(String email, String password) async {
+    // เช็คการ Login ว่าถูกต้องหรือไม่
     bool check = false;
     final snapshot = await FirebaseFirestore.instance
         .collection("user")
@@ -122,10 +129,12 @@ class _LoginPageState extends State<LoginPage> {
 
     if (snapshot.docs.length == 0) {
       setState(() {
+        // ถ้าไม่ถูกต้อง
         check = true;
       });
     } else {
       setState(() {
+        // ถ้าถูกต้อง
         check = false;
       });
     }
@@ -135,9 +144,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        /* appBar: new AppBar(
-          title: new Text('Flutter login demo'),
-        ), */
         body: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -216,22 +222,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      // Padding(
-                      //   padding:
-                      //       const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                      //   child: new TextField(
-                      //     maxLines: 1,
-                      //     obscureText: true,
-                      //     autofocus: false,
-                      //     controller: passwordController,
-                      //     decoration: new InputDecoration(
-                      //         hintText: 'รหัสผ่าน',
-                      //         icon: new Icon(
-                      //           Icons.lock,
-                      //           color: Colors.grey,
-                      //         )),
-                      //   ),
-                      // ),
                       Container(
                         height: 50,
                         margin: EdgeInsets.fromLTRB(10, 30, 20, 10),
@@ -246,6 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                               style: new TextStyle(fontSize: 20.0),
                             ),
                             onPressed: () {
+                              // ไปที่ Method validateAndSubmit()
                               validateAndSubmit();
                             }),
                       ),
@@ -257,6 +248,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 18.0, fontWeight: FontWeight.w300)),
                           new InkWell(
                               onTap: () {
+                                // ไปหน้าสมัครสมาชิก
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

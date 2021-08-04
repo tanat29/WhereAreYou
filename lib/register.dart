@@ -1,7 +1,6 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -13,14 +12,13 @@ class Register extends StatefulWidget {
 }
 
 class RegisterState extends State<Register> {
+  // ประกาศตัวแปร
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController telController = TextEditingController();
   bool check = false;
   bool register = false;
-
-  final db = FirebaseDatabase.instance.reference().child("user");
 
   @override
   void initState() {
@@ -173,6 +171,7 @@ class RegisterState extends State<Register> {
                 ))));
   }
 
+  // เช็ค format Email
   bool validateEmail(String email) {
     bool emailValid = RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -188,6 +187,7 @@ class RegisterState extends State<Register> {
     var Tel = telController.text.trim();
     var Type = dropdownValue;
 
+    // Validate ข้อมูลก่อนไปสมัครสมาชิก
     if (Email.isEmpty) {
       Toast.show("กรุณาใส่อีเมลล์ก่อน", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
@@ -224,6 +224,7 @@ class RegisterState extends State<Register> {
       return;
     }
 
+    // แสดง Progress
     final ProgressDialog pDialog = ProgressDialog(context);
     pDialog.style(
         message: "กรุณารอสักครู่ ...",
@@ -231,17 +232,20 @@ class RegisterState extends State<Register> {
             margin: EdgeInsets.all(10.0), child: CircularProgressIndicator()));
     pDialog.show();
 
+    // เช็คอีเมลล์
     if (await checkIfDocExists(Email)) {
+      // ถ้าอีเมลล์ซ้ำ
       Toast.show("อีเมลล์ซ้ำ กรุณาเปลี่ยนอีเมลล์", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       pDialog.hide();
       return;
     } else {
+      // ถ้าอีเมลล์ไม่ซ้ำ ให้บักทึกข้อมูล
       pDialog.hide();
       CollectionReference users = FirebaseFirestore.instance.collection('user');
 
       users.add({
-        'user_id': users.id,
+        'user_id': "",
         'email': Email,
         'password': Password,
         'username': Username,
@@ -259,6 +263,7 @@ class RegisterState extends State<Register> {
     }
   }
 
+// เช็คอีเมลล์ว่าซ้ำหรือไม่
   Future<bool> checkIfDocExists(String email) async {
     bool check = false;
     final snapshot = await FirebaseFirestore.instance
@@ -268,10 +273,12 @@ class RegisterState extends State<Register> {
 
     if (snapshot.docs.length == 0) {
       setState(() {
+        // ถ้าไม่ซ้ำให้เป็น false
         check = false;
       });
     } else {
       setState(() {
+        // ถ้าซ้ำให้เป็น true
         check = true;
       });
     }
