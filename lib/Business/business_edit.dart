@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class BusinessEdit extends StatefulWidget {
+  // รับค่ามาจากหน้าก่อน
   var place_id,
       address,
       business_name,
@@ -85,6 +86,7 @@ class BusinessEdit extends StatefulWidget {
 }
 
 class _BusinessEdit extends State<BusinessEdit> {
+  // ประกาศตัวแปร
   bool uploading = false;
   double val = 0;
   late CollectionReference imgRef;
@@ -515,6 +517,7 @@ class _BusinessEdit extends State<BusinessEdit> {
     );
   }
 
+  // เลือกรูปภาพ
   chooseImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
@@ -547,6 +550,7 @@ class _BusinessEdit extends State<BusinessEdit> {
     print("Edit");
   }
 
+  // validate อีเมลล์
   bool validateEmail(String email) {
     bool emailValid = RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -554,6 +558,7 @@ class _BusinessEdit extends State<BusinessEdit> {
     return emailValid;
   }
 
+  // กำหนด Dropdown
   String dropdownValue = 'ร้านอาหาร';
   List<String> business_type = [
     'ร้านอาหาร',

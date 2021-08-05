@@ -6,6 +6,7 @@ import 'dart:async';
 import 'login.dart';
 
 class FullImage extends StatefulWidget {
+  // รับค่า photo มาจากไฟล์ก่อน
   var photo;
   FullImage({
     this.photo,
@@ -28,6 +29,7 @@ class _FullImage extends State<FullImage> {
         Container(
           color: Colors.black,
           child: Center(
+            // แสดงรูปภาพ
             child: Image.network(widget.photo, width: double.maxFinite),
           ),
         ),
@@ -36,6 +38,7 @@ class _FullImage extends State<FullImage> {
           right: 20.0,
           child: InkWell(
             onTap: () {
+              // กดย้อนกลับ
               Navigator.pop(context, false);
             },
             child: Icon(

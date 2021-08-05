@@ -1,7 +1,6 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:noppon/Entrepreneur/launcher.dart';
@@ -25,6 +24,7 @@ class EditUser extends StatelessWidget {
 }
 
 class EditUser1 extends StatefulWidget {
+  // รับค่ามาจากหน้าก่อน
   var user_id, email, password, username, photo, tel, type;
   EditUser1(
       {this.user_id,
@@ -40,6 +40,7 @@ class EditUser1 extends StatefulWidget {
 }
 
 class EditUserState extends State<EditUser1> {
+  // ประกาศตัวแปร
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
@@ -51,6 +52,7 @@ class EditUserState extends State<EditUser1> {
   @override
   void initState() {
     super.initState();
+    // set ค่าที่รับมา
     emailController.text = widget.email;
     passwordController.text = widget.password;
     usernameController.text = widget.username;
@@ -62,6 +64,7 @@ class EditUserState extends State<EditUser1> {
     super.dispose();
   }
 
+  // ตรวจสอบอีเมลล์
   bool validateEmail(String email) {
     bool emailValid = RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -69,6 +72,7 @@ class EditUserState extends State<EditUser1> {
     return emailValid;
   }
 
+  //ประกาศตัวแปร
   String dropdownValue = 'ผู้ประกอบการ';
   List<String> user_type = ['ผู้ประกอบการ', 'ผู้ใช้ทั่วไป'];
 
@@ -80,6 +84,7 @@ class EditUserState extends State<EditUser1> {
     var Tel = telController.text.trim();
     var Type = dropdownValue;
 
+    // validate ข้อมูล
     if (Email.isEmpty) {
       Toast.show("กรุณาใส่อีเมลล์ก่อน", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
@@ -116,6 +121,7 @@ class EditUserState extends State<EditUser1> {
       return;
     }
 
+    // แสดง Preogress
     final ProgressDialog pDialog = ProgressDialog(context);
     pDialog.style(
         message: "กรุณารอสักครู่ ...",
@@ -124,6 +130,7 @@ class EditUserState extends State<EditUser1> {
     pDialog.show();
 
     if (widget.email == Email) {
+      // อัปเดตข้อมูล
       FirebaseFirestore.instance.collection('user').doc(widget.user_id).update({
         'user_id': widget.user_id,
         'email': Email,
@@ -133,6 +140,7 @@ class EditUserState extends State<EditUser1> {
         'type': Type
       }).then((value) async {
         pDialog.hide();
+        // update SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('email', Email);
         await prefs.setString('password', Password);
@@ -156,6 +164,7 @@ class EditUserState extends State<EditUser1> {
     }
   }
 
+  // เช็คอีเมลล์ว่าซ้ำหรือไม่
   Future<bool> checkIfDocExists(String email) async {
     bool check = false;
     final snapshot = await FirebaseFirestore.instance
@@ -309,6 +318,7 @@ class EditUserState extends State<EditUser1> {
                             style: new TextStyle(fontSize: 20.0),
                           ),
                           onPressed: () {
+                            // ไปที่ EditUserMethod
                             EditUserMethod(context);
                           }),
                     ),

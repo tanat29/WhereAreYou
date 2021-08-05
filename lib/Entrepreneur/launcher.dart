@@ -16,10 +16,12 @@ class _LauncherState extends State<Launcher> {
     Profile(),
   ];
 
+  // กดปุ่มย้อนกลับจะไป Logout
   Future<bool> _onWillPop() async {
     return (await LogoutMethod(context)) ?? false;
   }
 
+  // ฟังก์ชัน Logout
   LogoutMethod(BuildContext context) async {
     showDialog(
       context: context,
@@ -27,7 +29,7 @@ class _LauncherState extends State<Launcher> {
         return AlertDialog(
           title: Row(children: [
             Image.asset(
-              'assets/flutter-icon.png',
+              'assets/logo.png',
               width: 30,
               height: 30,
               fit: BoxFit.contain,

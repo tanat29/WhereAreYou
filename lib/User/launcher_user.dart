@@ -29,6 +29,7 @@ class _LauncherState2 extends State<Launcher_User> {
     return (await LogoutMethod(context)) ?? false;
   }
 
+  // ฟังก์ชัน Logout
   LogoutMethod(BuildContext context) async {
     showDialog(
       context: context,
@@ -36,7 +37,7 @@ class _LauncherState2 extends State<Launcher_User> {
         return AlertDialog(
           title: Row(children: [
             Image.asset(
-              'assets/flutter-icon.png',
+              'assets/logo.png',
               width: 30,
               height: 30,
               fit: BoxFit.contain,

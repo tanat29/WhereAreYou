@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,7 +25,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final db = FirebaseDatabase.instance.reference().child("user");
+  // ประกาศตัวแปร
   var user_id, email, password, photo, username, tel, type;
   late File _image;
 
@@ -39,6 +38,7 @@ class _ProfileState extends State<Profile> {
   }
 
   void _asyncMethod() async {
+    // รับค่าจาก SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       user_id = prefs.getString('user_id');
@@ -51,19 +51,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  SetImage() {
-    try {
-      if (photo == "") {
-        return Image.network(
-          'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png',
-          fit: BoxFit.cover,
-        );
-      } else {
-        return Image.network(photo, fit: BoxFit.cover);
-      }
-    } on Exception catch (_) {}
-  }
-
+  // ฟังก์ชัน Logout
   LogoutMethod(BuildContext context) async {
     showDialog(
       context: context,
@@ -97,6 +85,7 @@ class _ProfileState extends State<Profile> {
                 style: new TextStyle(color: Colors.blue),
               ),
               onPressed: () async {
+                // ถ้ากด ใช่ ให้ทำการ Logout
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.clear();
                 Navigator.push(
@@ -111,6 +100,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // เลือกรูปจากอุปกรณ์
   Future getImageDevice() async {
     final _picker = ImagePicker();
     var image = await _picker.getImage(source: ImageSource.gallery);
@@ -123,10 +113,11 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  // อัปโหลดรูปภาพ
   Future uploadPic(File _image) async {
-    print("upload");
     var storage = FirebaseStorage.instance;
 
+    // แสดง Progress
     final ProgressDialog pDialog = ProgressDialog(context);
     pDialog.style(
         message: "กรุณารอสักครู่...",
@@ -135,17 +126,20 @@ class _ProfileState extends State<Profile> {
     pDialog.show();
 
     if (_image == null) {
+      // ถ้าไม่มีรูปให้แสดง SnackBar
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text('กรุณาเลือกรูปก่อน')));
       pDialog.hide();
       return;
     } else {
+      // ถ้ามีรูปให้ทำการอัพโหลด
       String fileName =
           new DateFormat('dd-MM-yyyy_kk:mm:ss').format(DateTime.now()) + ".jpg";
 
       TaskSnapshot snapshot =
           await storage.ref().child("User/$fileName").putFile(_image);
       if (snapshot.state == TaskState.success) {
+        // ถ้าอัปโหลดสำเร็จ จะรับค่า Url มา
         final String downloadUrl = await snapshot.ref.getDownloadURL();
 
         pDialog.hide();
@@ -155,10 +149,12 @@ class _ProfileState extends State<Profile> {
         var User_id = prefs.getString("user_id");
         var photo_before = prefs.getString("photo");
 
+        // ลบรูปเก่าออก
         if (photo_before != "") {
           FirebaseStorage.instance.refFromURL(photo_before!).delete();
         }
 
+        // อัปเดต Url อันใหม่
         prefs.setString('photo', downloadUrl);
         FirebaseFirestore.instance
             .collection('user')
@@ -172,10 +168,6 @@ class _ProfileState extends State<Profile> {
         print('Error from image repo ${snapshot.state.toString()}');
         throw ('This file is not an image');
       }
-
-      //   // pDialog.hide();
-      //   // Toast.show("อัพโหลดรูปสำเร็จ", context,
-      //   //     duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     }
   }
 
@@ -230,6 +222,7 @@ class _ProfileState extends State<Profile> {
                         size: 25.0,
                       ),
                       onPressed: () {
+                        // เลือกรูปจากอุปกรณ์
                         getImageDevice();
                       },
                     ),

@@ -9,14 +9,12 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:noppon/Model/user.dart';
 import 'package:noppon/full_image.dart';
-import 'package:noppon/zz.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
-// Uncomment lines 7 and 10 to view the visual layout at runtime.
-// import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 class Business_Detail extends StatefulWidget {
+  // รับค่ามาจากหน้าก่อน
   var place_id,
       address,
       business_name,
@@ -92,6 +90,7 @@ class Business_Detail extends StatefulWidget {
 }
 
 class _Business_Detail extends State<Business_Detail> {
+  //ประกาศตัวแปร
   var user_id, user_type;
   bool isLiked = false;
   late double rating = 5;
@@ -116,6 +115,7 @@ class _Business_Detail extends State<Business_Detail> {
     user_id = prefs.getString('user_id');
     user_type = prefs.getString('type');
 
+    //เช็คว่ากด Like ไว้รึยัง
     final snapshot = await FirebaseFirestore.instance
         .collection("like")
         .where('place_id', isEqualTo: widget.place_id)
@@ -124,17 +124,19 @@ class _Business_Detail extends State<Business_Detail> {
 
     setState(() {
       if (snapshot.docs.length == 0) {
+        //ถ้ายังไม่กดแล้ว
         isLiked = false;
-        //Toast.show("UnLike", context,duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       } else {
+        //ถ้ากดแล้ว
         isLiked = true;
-        //Toast.show("Like", context,duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       }
     });
   }
 
+  //กด Like
   LikeMethod(String like) {
     if (like == "like") {
+      // ถ้ากด Like อยุ่ จะทำการ Unlike
       FirebaseFirestore.instance
           .collection('like')
           .where('place_id', isEqualTo: widget.place_id)
@@ -148,6 +150,7 @@ class _Business_Detail extends State<Business_Detail> {
         });
       });
     } else {
+      // ถ้ายังไม่ Like ให้กด Like
       FirebaseFirestore.instance.collection('like').add({
         'place_id': widget.place_id,
         'user_id': user_id,
@@ -160,6 +163,7 @@ class _Business_Detail extends State<Business_Detail> {
 
   final Map<String, Marker> _markers = {};
   Future<void> _onMapCreated(GoogleMapController controller) async {
+    // ระบบแผนที่
     setState(() {
       _markers.clear();
 
@@ -186,6 +190,7 @@ class _Business_Detail extends State<Business_Detail> {
       body: ListView(
         shrinkWrap: true,
         children: [
+          // ส่งค่าไปยัง GetPhotoArray
           GetPhotoArray(
               widget.photo1,
               widget.photo2,
@@ -234,6 +239,7 @@ class _Business_Detail extends State<Business_Detail> {
                                 : Image.asset('assets/btn_like_red.png'),
                             //icon: Image.asset('assets/btn_like_gray.png'),
                             onPressed: () {
+                              // ถ้า Like จะสีแดง ถ้าไม่ Like จะสีเทา
                               setState(() {
                                 if (isLiked == true) {
                                   LikeMethod("like");
@@ -619,6 +625,7 @@ class _Business_Detail extends State<Business_Detail> {
                                                   .collection("comment")
                                                   .get();
                                           if (snapshot.docs.length == 0) {
+                                            // เพิ่ม Comment
                                             FirebaseFirestore.instance
                                                 .collection('comment')
                                                 .add({
@@ -638,6 +645,7 @@ class _Business_Detail extends State<Business_Detail> {
                                                       'comment_id': value.id
                                                     }));
                                           } else {
+                                            // เพิ่ม Comment
                                             FirebaseFirestore.instance
                                                 .collection('comment')
                                                 .orderBy('array',
@@ -741,7 +749,10 @@ class _Business_Detail extends State<Business_Detail> {
                   itemBuilder: (ctx, index) {
                     DocumentSnapshot data = snapshot.data!.docs[index];
                     return data['place_id'] == widget.place_id
-                        ? CommentList(data: data, user_id: user_id)
+                        ? CommentList(
+                            data: data,
+                            user_id:
+                                user_id) // ส่งค่าไปยัง CommentList เพื่อหา Username
                         : Visibility(child: Text(""), visible: false);
                   },
                 );
@@ -752,6 +763,7 @@ class _Business_Detail extends State<Business_Detail> {
     );
   }
 
+  // รับค่า photo มาทั้ง 10 จากนั้นคืน ImageSlide กลับไป
   GetPhotoArray(photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8,
       photo9, photo10) {
     int check_index = 0;
@@ -769,6 +781,7 @@ class _Business_Detail extends State<Business_Detail> {
     ];
     if (photo10.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -834,6 +847,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo9.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -895,6 +909,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo8.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -952,6 +967,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo7.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -1005,6 +1021,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo6.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -1054,6 +1071,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo5.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -1098,6 +1116,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo4.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -1138,6 +1157,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo3.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -1174,6 +1194,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo2.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -1206,6 +1227,7 @@ class _Business_Detail extends State<Business_Detail> {
           });
     } else if (photo1.isNotEmpty) {
       return InkWell(
+          // คืน ImageSlide กลับไป
           child: ImageSlideshow(
             width: double.infinity,
             height: 200,
@@ -1240,10 +1262,12 @@ class _Business_Detail extends State<Business_Detail> {
   }
 }
 
+// แสดงข้อมูล comment
 class CommentList extends StatelessWidget {
   var data, user_id;
   CommentList({this.data, this.user_id});
 
+  // return ดาวกลับไป
   Text _buildRatingStars(int rating) {
     String stars = '';
     for (int i = 0; i < rating; i++) {
@@ -1278,6 +1302,7 @@ class CommentList extends StatelessWidget {
                             padding: EdgeInsets.all(10),
                             child: Column(
                               children: [
+                                // แสดงชื่อกับวันที่
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -1314,6 +1339,7 @@ class CommentList extends StatelessWidget {
                               ],
                             ))),
                     onTap: () {
+                      // ถ้าเป็นเจ้าของ comment สามารถลบได้
                       if (data["user_id"] == user_id) {
                         showDialog(
                           context: context,

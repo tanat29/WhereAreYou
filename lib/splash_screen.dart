@@ -50,13 +50,16 @@ class _TimerButton extends State<SplashScreen> {
     var UserType = prefs.getString('type');
 
     if (Check == true) {
+      // ถ้า Login ไว้แล้ว
       if (UserType == 'ผู้ประกอบการ') {
+        // ผู้ประกอบการ จะไปหน้า Launcher
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => Launcher()),
           (Route<dynamic> route) => false,
         );
       } else {
+        // ผู้ใช้ทั่วไป จะไปหน้า Launcher_User
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => Launcher_User()),
@@ -64,6 +67,7 @@ class _TimerButton extends State<SplashScreen> {
         );
       }
     } else {
+      // ไปฟังก์ชันนับเวลา
       startTimeout();
     }
   }
