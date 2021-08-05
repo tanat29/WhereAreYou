@@ -118,25 +118,25 @@ class _BusinessEdit extends State<BusinessEdit> {
   void initState() {
     super.initState();
     imgRef = FirebaseFirestore.instance.collection('place');
-    // business_name_Controller.text = widget.business_name;
-    // business_name1_Controller.text = widget.business_name1;
-    // business_name2_Controller.text = widget.business_name2;
-    // business_name3_Controller.text = widget.business_name3;
-    // business_name_english_Controller.text = widget.business_name_english;
-    // tel_Controller.text = widget.tel;
-    // day_Controller.text = widget.day;
-    // time_Controller.text = widget.time;
-    // price_Controller.text = widget.price;
-    // website_Controller.text = widget.website;
-    // facebook_Controller.text = widget.facebook;
-    // instagram_Controller.text = widget.instagram;
-    // line_Controller.text = widget.line;
-    // email_Controller.text = widget.email;
-    // address_Controller.text = widget.address;
-    // detail_Controller.text = widget.detail;
-    // google_map_Controller.text = widget.map;
-    // latitude_Controller.text = widget.latitude;
-    // longitude_Controller.text = widget.longitude;
+    business_name_Controller.text = widget.business_name;
+    business_name1_Controller.text = widget.business_name1;
+    business_name2_Controller.text = widget.business_name2;
+    business_name3_Controller.text = widget.business_name3;
+    business_name_english_Controller.text = widget.business_name_english;
+    tel_Controller.text = widget.tel;
+    day_Controller.text = widget.day;
+    time_Controller.text = widget.time;
+    price_Controller.text = widget.price;
+    website_Controller.text = widget.website;
+    facebook_Controller.text = widget.facebook;
+    instagram_Controller.text = widget.instagram;
+    line_Controller.text = widget.line;
+    email_Controller.text = widget.email;
+    address_Controller.text = widget.address;
+    detail_Controller.text = widget.detail;
+    google_map_Controller.text = widget.map;
+    latitude_Controller.text = widget.latitude;
+    longitude_Controller.text = widget.longitude;
   }
 
   @override
