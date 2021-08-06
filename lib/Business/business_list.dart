@@ -250,9 +250,9 @@ class _Business_List extends State<Business_List> {
                                                             doc["instagram"],
                                                         line: doc["line"],
                                                         latitude:
-                                                            doc["latitude"],
+                                                            doc["latitude"].toString(),
                                                         longitude:
-                                                            doc["longitude"],
+                                                            doc["longitude"].toString(),
                                                         map: doc["map"],
                                                         photo1: doc["photo1"],
                                                         photo2: doc["photo2"],
@@ -265,7 +265,6 @@ class _Business_List extends State<Business_List> {
                                                         photo9: doc["photo9"],
                                                         photo10: doc["photo10"],
                                                         price: doc["price"],
-                                                        rating: doc["rating"],
                                                         tel: doc["tel"],
                                                         time: doc["time"],
                                                         type: doc["type"],
